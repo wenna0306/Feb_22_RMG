@@ -312,60 +312,60 @@ if authentication_status:
         linewidth = 2
 
     #---------------------------------------Outstanding Faults-----------------------------------------------------
-        st.markdown('##')
-        st.markdown('##')
-        st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
-        # st.markdown(':wavy_dash:' *50)
-        # st.markdown('---')
-        st.markdown(html_card_subheader_outstanding, unsafe_allow_html=True)
-        st.markdown('##')
+#         st.markdown('##')
+#         st.markdown('##')
+#         st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+#         # st.markdown(':wavy_dash:' *50)
+#         # st.markdown('---')
+#         st.markdown(html_card_subheader_outstanding, unsafe_allow_html=True)
+#         st.markdown('##')
 
-        df_outstanding_show = df_outstanding.loc[:, ['Building_Trade', 'Trade_Category', 'Type_of_Fault', 'Site', 'Building', 'Floor', 'Room',
-                                                     'Reported_Date', 'Other_Trades_Required_Date', 'Cost_Cap_Exceed_Date', 'Assistance_Requested_Date',
-                                                    'Remarks']].sort_values('Building_Trade')
+#         df_outstanding_show = df_outstanding.loc[:, ['Building_Trade', 'Trade_Category', 'Type_of_Fault', 'Site', 'Building', 'Floor', 'Room',
+#                                                      'Reported_Date', 'Other_Trades_Required_Date', 'Cost_Cap_Exceed_Date', 'Assistance_Requested_Date',
+#                                                     'Remarks']].sort_values('Building_Trade')
 
-        props = 'font-style: italic; color: #ffffff; font-size:0.8em; font-weight:normal;'  #border: 0.0001px solid #116a8c; background: #116a8c'
-        df_outstandingdataframe = df_outstanding_show.style.applymap(lambda x: props)
-        st.dataframe(df_outstandingdataframe, 10000, 200)
+#         props = 'font-style: italic; color: #ffffff; font-size:0.8em; font-weight:normal;'  #border: 0.0001px solid #116a8c; background: #116a8c'
+#         df_outstandingdataframe = df_outstanding_show.style.applymap(lambda x: props)
+#         st.dataframe(df_outstandingdataframe, 10000, 200)
 
-        ser_outstanding_building = df_outstanding.groupby(['Building_Trade'])['Type_of_Fault'].count().sort_values(ascending=False)
-        ser_outstanding_category = df_outstanding.groupby(['Trade_Category'])['Type_of_Fault'].count().sort_values(ascending=False)
+#         ser_outstanding_building = df_outstanding.groupby(['Building_Trade'])['Type_of_Fault'].count().sort_values(ascending=False)
+#         ser_outstanding_category = df_outstanding.groupby(['Trade_Category'])['Type_of_Fault'].count().sort_values(ascending=False)
 
-        x_outstanding_building = ser_outstanding_building.index
-        y_outstanding_building = ser_outstanding_building.values
-        x_outstanding_category = ser_outstanding_category.index
-        y_outstanding_category = ser_outstanding_category.values
+#         x_outstanding_building = ser_outstanding_building.index
+#         y_outstanding_building = ser_outstanding_building.values
+#         x_outstanding_category = ser_outstanding_category.index
+#         y_outstanding_category = ser_outstanding_category.values
 
-        fig_outstanding_building, fig_outstanding_category = st.columns([1, 2])
+#         fig_outstanding_building, fig_outstanding_category = st.columns([1, 2])
 
-        with fig_outstanding_building, _lock:
-            fig_outstanding_building = go.Figure(data=[go.Pie(labels=x_outstanding_building, values=y_outstanding_building,
-                                                              hoverinfo='all', textinfo='label+percent+value', textfont_size=15,
-                                                              textfont_color='white', textposition='inside', showlegend=False,
-                                                              hole=.4)])
-            fig_outstanding_building.update_layout(title='Number of Fault vs Building Trade', annotations=[dict(text='Outstanding', x=0.5, y=0.5, font_color='white', font_size=15, showarrow=False)])
-            fig_outstanding_building.update_traces(marker=dict(colors=colorpieoutstanding))
-            st.plotly_chart(fig_outstanding_building, use_container_width=True)
+#         with fig_outstanding_building, _lock:
+#             fig_outstanding_building = go.Figure(data=[go.Pie(labels=x_outstanding_building, values=y_outstanding_building,
+#                                                               hoverinfo='all', textinfo='label+percent+value', textfont_size=15,
+#                                                               textfont_color='white', textposition='inside', showlegend=False,
+#                                                               hole=.4)])
+#             fig_outstanding_building.update_layout(title='Number of Fault vs Building Trade', annotations=[dict(text='Outstanding', x=0.5, y=0.5, font_color='white', font_size=15, showarrow=False)])
+#             fig_outstanding_building.update_traces(marker=dict(colors=colorpieoutstanding))
+#             st.plotly_chart(fig_outstanding_building, use_container_width=True)
 
-        with fig_outstanding_category, _lock:
-            fig_outstanding_category = go.Figure(data=[go.Bar(x=x_outstanding_category, y=y_outstanding_category, orientation='v',
-                                                              text=y_outstanding_category, textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                                                               textposition='auto', textangle=-45)])
-            fig_outstanding_category.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color=titlefontcolor, showgrid=False, gridwidth=gridwidth,
-                               gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
-            fig_outstanding_category.update_yaxes(title_text='Number of Fault', title_font_color=titlefontcolor, showgrid=True, gridwidth=gridwidth,
-                               gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
-            fig_outstanding_category.update_traces(marker_color=markercolor, marker_line_color=markerlinecolor, marker_line_width=markerlinewidth)
-            fig_outstanding_category.update_layout(title='Number of Fault vs Trade Category', plot_bgcolor=plot_bgcolor)
-            st.plotly_chart(fig_outstanding_category, use_container_width=True)
+#         with fig_outstanding_category, _lock:
+#             fig_outstanding_category = go.Figure(data=[go.Bar(x=x_outstanding_category, y=y_outstanding_category, orientation='v',
+#                                                               text=y_outstanding_category, textfont=dict(family='sana serif', size=14, color='#c4fff7'),
+#                                                                textposition='auto', textangle=-45)])
+#             fig_outstanding_category.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color=titlefontcolor, showgrid=False, gridwidth=gridwidth,
+#                                gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
+#             fig_outstanding_category.update_yaxes(title_text='Number of Fault', title_font_color=titlefontcolor, showgrid=True, gridwidth=gridwidth,
+#                                gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
+#             fig_outstanding_category.update_traces(marker_color=markercolor, marker_line_color=markerlinecolor, marker_line_width=markerlinewidth)
+#             fig_outstanding_category.update_layout(title='Number of Fault vs Trade Category', plot_bgcolor=plot_bgcolor)
+#             st.plotly_chart(fig_outstanding_category, use_container_width=True)
 
-    #--------------------------------------Daily Fault----------------------------------------------------------
-        st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
-        st.markdown(html_card_subheader_daily, unsafe_allow_html=True)
-        st.markdown('##')
+#     #--------------------------------------Daily Fault----------------------------------------------------------
+#         st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+#         st.markdown(html_card_subheader_daily, unsafe_allow_html=True)
+#         st.markdown('##')
 
-        df_daily = df2.loc[(df2['Cancel_Status'].isna()) & (df2['Work_Completed_Date'].notna()),:]
-        x_daily = df_daily['Reported_Date'].dt.day.value_counts().sort_index().index
+#         df_daily = df2.loc[(df2['Cancel_Status'].isna()) & (df2['Work_Completed_Date'].notna()),:]
+#         x_daily = df_daily['Reported_Date'].dt.day.value_counts().sort_index().index
         y_daily = df_daily['Reported_Date'].dt.day.value_counts().sort_index().values
         y_mean = df_daily['Reported_Date'].dt.day.value_counts().sort_index().mean()
 
