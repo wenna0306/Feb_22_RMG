@@ -359,13 +359,13 @@ if authentication_status:
 #             fig_outstanding_category.update_layout(title='Number of Fault vs Trade Category', plot_bgcolor=plot_bgcolor)
 #             st.plotly_chart(fig_outstanding_category, use_container_width=True)
 
-#     #--------------------------------------Daily Fault----------------------------------------------------------
-#         st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
-#         st.markdown(html_card_subheader_daily, unsafe_allow_html=True)
-#         st.markdown('##')
+    #--------------------------------------Daily Fault----------------------------------------------------------
+        st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+        st.markdown(html_card_subheader_daily, unsafe_allow_html=True)
+        st.markdown('##')
 
-#         df_daily = df2.loc[(df2['Cancel_Status'].isna()) & (df2['Work_Completed_Date'].notna()),:]
-#         x_daily = df_daily['Reported_Date'].dt.day.value_counts().sort_index().index
+        df_daily = df2.loc[(df2['Cancel_Status'].isna()) & (df2['Work_Completed_Date'].notna()),:]
+        x_daily = df_daily['Reported_Date'].dt.day.value_counts().sort_index().index
         y_daily = df_daily['Reported_Date'].dt.day.value_counts().sort_index().values
         y_mean = df_daily['Reported_Date'].dt.day.value_counts().sort_index().mean()
 
