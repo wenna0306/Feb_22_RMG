@@ -71,7 +71,8 @@ if authentication_status:
                            'Work Started Date', 'Work Completed Date',
                            'Other Trades Required Date', 'Cost Cap Exceed Date',
                            'Assistance Requested Date']
-            return pd.read_excel(filename, header=1, index_col='Fault Number', usecols=cols, parse_dates=parse_dates)
+            dtype_cols = {'Site': 'str', 'Building': 'str', 'Floor': 'str', 'Room': 'str'}
+            return pd.read_excel(filename, header=1, index_col='Fault Number', usecols=cols, parse_dates=parse_dates, dtype=dtype_cols)
 
 
         df2 = fetch_file('fault_RMG.xlsx')
@@ -123,17 +124,17 @@ if authentication_status:
         bin_recovered_high = [0, 30, np.inf]
         label_recovered_high = ['0-0.5hr', '0.5-np.inf']
 
-        df_low['KPI_For_Responded'] = pd.cut(df_low.Time_Acknowledged_mins, bins=bin_responded_low, labels=label_responded_low,
+        df_low['KPI_For_Responded'] = pd.cut(df_low.Time_Site_Reached_mins, bins=bin_responded_low, labels=label_responded_low,
                                           include_lowest=True)
         df_low['KPI_For_Recovered'] = pd.cut(df_low.Time_Work_Recovered_mins, bins=bin_recovered_low, labels=label_recovered_low,
                                           include_lowest=True)
 
-        df_medium['KPI_For_Responded'] = pd.cut(df_medium.Time_Acknowledged_mins, bins=bin_responded_medium,
+        df_medium['KPI_For_Responded'] = pd.cut(df_medium.Time_Site_Reached_mins, bins=bin_responded_medium,
                                           labels=label_responded_medium, include_lowest=True)
         df_medium['KPI_For_Recovered'] = pd.cut(df_medium.Time_Work_Recovered_mins, bins=bin_recovered_medium,
                                           labels=label_recovered_medium, include_lowest=True)
 
-        df_high['KPI_For_Responded'] = pd.cut(df_high.Time_Acknowledged_mins, bins=bin_responded_high, labels=label_responded_high,
+        df_high['KPI_For_Responded'] = pd.cut(df_high.Time_Site_Reached_mins, bins=bin_responded_high, labels=label_responded_high,
                                           include_lowest=True)
         df_high['KPI_For_Recovered'] = pd.cut(df_high.Time_Work_Recovered_mins, bins=bin_recovered_high,
                                           labels=label_recovered_high, include_lowest=True)
@@ -312,52 +313,111 @@ if authentication_status:
         linewidth = 2
 
     #---------------------------------------Outstanding Faults-----------------------------------------------------
-#         st.markdown('##')
-#         st.markdown('##')
-#         st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
-#         # st.markdown(':wavy_dash:' *50)
-#         # st.markdown('---')
-#         st.markdown(html_card_subheader_outstanding, unsafe_allow_html=True)
-#         st.markdown('##')
+        st.markdown('##')
+        st.markdown('##')
+        st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+        # st.markdown(':wavy_dash:' *50)
+        # st.markdown('---')
+        st.markdown(html_card_subheader_outstanding, unsafe_allow_html=True)
+        st.markdown('##')
 
-#         df_outstanding_show = df_outstanding.loc[:, ['Building_Trade', 'Trade_Category', 'Type_of_Fault', 'Site', 'Building', 'Floor', 'Room',
-#                                                      'Reported_Date', 'Other_Trades_Required_Date', 'Cost_Cap_Exceed_Date', 'Assistance_Requested_Date',
-#                                                     'Remarks']].sort_values('Building_Trade')
+        df_outstanding_show = df_outstanding.loc[:, ['Building_Trade', 'Trade_Category', 'Type_of_Fault', 'Site', 'Building', 'Floor', 'Room',
+                                                     'Reported_Date', 'Other_Trades_Required_Date', 'Cost_Cap_Exceed_Date', 'Assistance_Requested_Date',
+                                                    'Remarks']].sort_values('Building_Trade')
 
-#         props = 'font-style: italic; color: #ffffff; font-size:0.8em; font-weight:normal;'  #border: 0.0001px solid #116a8c; background: #116a8c'
-#         df_outstandingdataframe = df_outstanding_show.style.applymap(lambda x: props)
-#         st.dataframe(df_outstandingdataframe, 10000, 200)
+        props = 'font-style: italic; color: #ffffff; font-size:0.8em; font-weight:normal;'  #border: 0.0001px solid #116a8c; background: #116a8c'
+        df_outstandingdataframe = df_outstanding_show.style.applymap(lambda x: props)
+        st.dataframe(df_outstandingdataframe, 2000, 200)
 
-#         ser_outstanding_building = df_outstanding.groupby(['Building_Trade'])['Type_of_Fault'].count().sort_values(ascending=False)
-#         ser_outstanding_category = df_outstanding.groupby(['Trade_Category'])['Type_of_Fault'].count().sort_values(ascending=False)
+        ser_outstanding_building = df_outstanding.groupby(['Building_Trade'])['Type_of_Fault'].count().sort_values(ascending=False)
+        ser_outstanding_category = df_outstanding.groupby(['Trade_Category'])['Type_of_Fault'].count().sort_values(ascending=False)
 
-#         x_outstanding_building = ser_outstanding_building.index
-#         y_outstanding_building = ser_outstanding_building.values
-#         x_outstanding_category = ser_outstanding_category.index
-#         y_outstanding_category = ser_outstanding_category.values
+        x_outstanding_building = ser_outstanding_building.index
+        y_outstanding_building = ser_outstanding_building.values
+        x_outstanding_category = ser_outstanding_category.index
+        y_outstanding_category = ser_outstanding_category.values
 
-#         fig_outstanding_building, fig_outstanding_category = st.columns([1, 2])
+        fig_outstanding_building, fig_outstanding_category = st.columns([1, 2])
 
-#         with fig_outstanding_building, _lock:
-#             fig_outstanding_building = go.Figure(data=[go.Pie(labels=x_outstanding_building, values=y_outstanding_building,
-#                                                               hoverinfo='all', textinfo='label+percent+value', textfont_size=15,
-#                                                               textfont_color='white', textposition='inside', showlegend=False,
-#                                                               hole=.4)])
-#             fig_outstanding_building.update_layout(title='Number of Fault vs Building Trade', annotations=[dict(text='Outstanding', x=0.5, y=0.5, font_color='white', font_size=15, showarrow=False)])
-#             fig_outstanding_building.update_traces(marker=dict(colors=colorpieoutstanding))
-#             st.plotly_chart(fig_outstanding_building, use_container_width=True)
+        with fig_outstanding_building, _lock:
+            fig_outstanding_building = go.Figure(data=[go.Pie(labels=x_outstanding_building, values=y_outstanding_building,
+                                                              hoverinfo='all', textinfo='label+percent+value', textfont_size=15,
+                                                              textfont_color='white', textposition='inside', showlegend=False,
+                                                              hole=.4)])
+            fig_outstanding_building.update_layout(title='Number of Fault vs Building Trade', annotations=[dict(text='Outstanding', x=0.5, y=0.5, font_color='white', font_size=15, showarrow=False)])
+            fig_outstanding_building.update_traces(marker=dict(colors=colorpieoutstanding))
+            st.plotly_chart(fig_outstanding_building, use_container_width=True)
 
-#         with fig_outstanding_category, _lock:
-#             fig_outstanding_category = go.Figure(data=[go.Bar(x=x_outstanding_category, y=y_outstanding_category, orientation='v',
-#                                                               text=y_outstanding_category, textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-#                                                                textposition='auto', textangle=-45)])
-#             fig_outstanding_category.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color=titlefontcolor, showgrid=False, gridwidth=gridwidth,
-#                                gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
-#             fig_outstanding_category.update_yaxes(title_text='Number of Fault', title_font_color=titlefontcolor, showgrid=True, gridwidth=gridwidth,
-#                                gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
-#             fig_outstanding_category.update_traces(marker_color=markercolor, marker_line_color=markerlinecolor, marker_line_width=markerlinewidth)
-#             fig_outstanding_category.update_layout(title='Number of Fault vs Trade Category', plot_bgcolor=plot_bgcolor)
-#             st.plotly_chart(fig_outstanding_category, use_container_width=True)
+        with fig_outstanding_category, _lock:
+            fig_outstanding_category = go.Figure(data=[go.Bar(x=x_outstanding_category, y=y_outstanding_category, orientation='v',
+                                                              text=y_outstanding_category, textfont=dict(family='sana serif', size=14, color='#c4fff7'),
+                                                               textposition='auto', textangle=-45)])
+            fig_outstanding_category.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color=titlefontcolor, showgrid=False, gridwidth=gridwidth,
+                               gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
+            fig_outstanding_category.update_yaxes(title_text='Number of Fault', title_font_color=titlefontcolor, showgrid=True, gridwidth=gridwidth,
+                               gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis, linecolor=linecolor_xy_axis)
+            fig_outstanding_category.update_traces(marker_color=markercolor, marker_line_color=markerlinecolor, marker_line_width=markerlinewidth)
+            fig_outstanding_category.update_layout(title='Number of Fault vs Trade Category', plot_bgcolor=plot_bgcolor)
+            st.plotly_chart(fig_outstanding_category, use_container_width=True)
+
+
+
+        Abala = df_outstanding[df_outstanding.Remarks.str.contains('abala|Abala|A.bala|a.bala|A.Bala')].shape[0]
+        Allan = df_outstanding[df_outstanding.Remarks.str.contains('Allan|allan|allen|Allen|alan|alen')].shape[0]
+        Aru = df_outstanding[df_outstanding.Remarks.str.contains('Aru|aru')].shape[0]
+        Hossain = df_outstanding[df_outstanding.Remarks.str.contains('Hossain|hossain')].shape[0]
+        Ilayaraja = df_outstanding[df_outstanding.Remarks.str.contains('Ilayaraja|ilayaraja')].shape[0]
+        Isyamudin = df_outstanding[df_outstanding.Remarks.str.contains('Isyamudin|isyamudin|lsyamudin|Lsyamudin')].shape[0]
+        Lifei = df_outstanding[df_outstanding.Remarks.str.contains('Lifei|lifei|Li Fei|Li fei|li fei')].shape[0]
+        Mani = df_outstanding[df_outstanding.Remarks.str.contains('Mani|mani')].shape[0]
+        Mingcai = df_outstanding[df_outstanding.Remarks.str.contains('Mingcai|mingcai|Ming Cai|Ming cai|ming cai')].shape[0]
+        Nazri = df_outstanding[df_outstanding.Remarks.str.contains('Nazri|nazri')].shape[0]
+        Satha = df_outstanding[df_outstanding.Remarks.str.contains('Satha|satha')].shape[0]
+        Senthil = df_outstanding[df_outstanding.Remarks.str.contains('Senthil|senthil')].shape[0]
+        Shanmu = df_outstanding[df_outstanding.Remarks.str.contains('Shanmu|shanmu')].shape[0]
+        Su = df_outstanding[df_outstanding.Remarks.str.contains('-Su|-su|- Su|- su')].shape[0]
+        Vbala = df_outstanding[df_outstanding.Remarks.str.contains('Vbala|vbala|V.bala|v.bala|V.Bala')].shape[0]
+        Jailani = df_outstanding[df_outstanding.Remarks.str.contains('Jailani|jailani|Jailan|jailan|Jailan|jailan')].shape[0]
+        Packiyaraj = df_outstanding[df_outstanding.Remarks.str.contains('Packiyaraj|packiyaraj')].shape[0]
+        Ela = df_outstanding[df_outstanding.Remarks.str.contains('Ela|ela')].shape[0]
+        FRC = df_outstanding[df_outstanding.Remarks.str.contains('FRC|frc|Frc')].shape[0]
+        Thandapani = df_outstanding[df_outstanding.Remarks.str.contains('Thandapani|thandapani')].shape[0]
+        Gary = df_outstanding[df_outstanding.Remarks.str.contains('Gary|gary')].shape[0]
+        Murugan = df_outstanding[df_outstanding.Remarks.str.contains('Murugan|murugan')].shape[0]
+        Rabart = df_outstanding[df_outstanding.Remarks.str.contains('Rabart|rabart')].shape[0]
+        Dutytech = df_outstanding[df_outstanding.Remarks.str.contains('Dutytech|dutytech')].shape[0]
+
+    
+
+
+        x_people_outstanding = ['Abala', 'Allan', 'Aru', 'Hossain', 'Ilayaraja', 'Isyamudin', 'LiFei', 'Mani', 'Mingcai', 'Nazri', 'Satha', 'Senthil', 'Shanmu', 'Su', 'Vbala', 'Jailani', 'Packiyaraj', 'Ela', 'FRC', 'Thandapani', 'Gary', 'Murugan', 'Rabart', 'Dutytech']
+        y_people_outstanding = [Abala, Allan, Aru, Hossain, Ilayaraja, Isyamudin, Lifei, Mani, Mingcai, Nazri, Satha, Senthil, Shanmu, Su, Vbala, Jailani, Packiyaraj, Ela, FRC, Thandapani, Gary, Murugan, Rabart, Dutytech]
+
+        y_people_outstanding_sum = sum(y_people_outstanding)
+        st.markdown(f"Total outstanding Fault = {y_people_outstanding_sum}")
+
+        fig_outstanding_technician, fig_outstanding_empty = st.columns(2)
+        with fig_outstanding_technician, _lock:
+
+            fig_outstanding_technician = go.Figure(data=[go.Bar(x=x_people_outstanding, y=y_people_outstanding, orientation='v', text=y_people_outstanding,
+                                            textfont=dict(family='sana serif', size=14, color='#c4fff7'),
+                                            textposition='auto', textangle=-45)])
+            fig_outstanding_technician.update_xaxes(title_text="Name", title_font_color=titlefontcolor, showgrid=False, gridwidth=gridwidth,
+                                gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis,
+                                linecolor=linecolor_xy_axis, tickangle=-45)
+            fig_outstanding_technician.update_yaxes(title_text='Number of Fault', title_font_color=titlefontcolor, showgrid=False,
+                                gridwidth=gridwidth,
+                                gridcolor=gridcolor, showline=True, linewidth=linewidth_xy_axis,
+                                linecolor=linecolor_xy_axis)
+            fig_outstanding_technician.update_traces(marker_color=markercolor, marker_line_color=markerlinecolor,
+                                marker_line_width=markerlinewidth, opacity=opacity03)
+            fig_outstanding_technician.update_layout(title='Number of Fault vs Name', plot_bgcolor=plot_bgcolor)
+            st.plotly_chart(fig_outstanding_technician, use_container_width=True)
+
+        with fig_outstanding_empty, _lock:
+            st.empty()
+
+
 
     #--------------------------------------Daily Fault----------------------------------------------------------
         st.markdown("""<hr style="height:5px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
@@ -935,7 +995,7 @@ if authentication_status:
 
 
     ## groupby building floor room
-        df4['buildingfloorroom'] = df4.Building + '-' + df4.Floor.astype(str) + '-' + df4.Room.astype(str)
+        df4['buildingfloorroom'] = df4.Building + '-' + df4.Floor + '-' + df4.Room
         df15 = df4.groupby(by=['buildingfloorroom']).agg(['count', 'max', 'min', 'mean', 'sum'])
         cols_name_buildingfloorroom = ['Fault_Acknowledged_count', 'Fault_Acknowledged_max(hrs)', 'Fault_Acknowledged_min(hrs)', 'Fault_Acknowledged_mean(hrs)',
                        'Fault_Acknowledged_sum(hrs)', 'Fault_Site_Reached_count', 'Fault_Site_Reached_max(hrs)', 'Fault_Site_Reached_min(hrs)',
@@ -1004,10 +1064,15 @@ if authentication_status:
         Packiyaraj = df3[df3.Remarks.str.contains('Packiyaraj|packiyaraj')].shape[0]
         Ela = df3[df3.Remarks.str.contains('Ela|ela')].shape[0]
         FRC = df3[df3.Remarks.str.contains('FRC|frc')].shape[0]
+        Thandapani = df3[df3.Remarks.str.contains('Thandapani|thandapani')].shape[0]
+        Gary = df3[df3.Remarks.str.contains('Gary|gary')].shape[0]
+        Murugan = df3[df3.Remarks.str.contains('Murugan|murugan')].shape[0]
+        Rabart = df3[df3.Remarks.str.contains('Rabart|rabart')].shape[0]
+        Dutytech = df3[df3.Remarks.str.contains('Dutytech|dutytech')].shape[0]
      
 
-        x_people = ['Abala', 'Allan', 'Aru', 'Hossain', 'Ilayaraja', 'Isyamudin', 'LiFei', 'Mani', 'Mingcai', 'Nazri', 'Satha', 'Senthil', 'Shanmu', 'Su', 'Vbala', 'Jailani', 'Packiyaraj', 'Ela', 'FRC']
-        y_people = [Abala, Allan, Aru, Hossain, Ilayaraja, Isyamudin, Lifei, Mani, Mingcai, Nazri, Satha, Senthil, Shanmu, Su, Vbala, Jailani, Packiyaraj, Ela, FRC]
+        x_people = ['Abala', 'Allan', 'Aru', 'Hossain', 'Ilayaraja', 'Isyamudin', 'LiFei', 'Mani', 'Mingcai', 'Nazri', 'Satha', 'Senthil', 'Shanmu', 'Su', 'Vbala', 'Jailani', 'Packiyaraj', 'Ela', 'FRC', 'Thandapani', 'Gary', 'Murugan', 'Rabart', 'Dutytech']
+        y_people = [Abala, Allan, Aru, Hossain, Ilayaraja, Isyamudin, Lifei, Mani, Mingcai, Nazri, Satha, Senthil, Shanmu, Su, Vbala, Jailani, Packiyaraj, Ela, FRC, Thandapani, Gary, Murugan, Rabart, Dutytech]
         y_people_sum = sum(y_people)
 
         st.markdown(f"Total Fault = {y_people_sum}")
