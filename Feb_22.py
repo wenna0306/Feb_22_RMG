@@ -75,7 +75,7 @@ if authentication_status:
             return pd.read_excel(filename, header=1, index_col='Fault Number', usecols=cols, parse_dates=parse_dates, dtype=dtype_cols)
 
 
-        df2 = fetch_file('Fault_RMG.xlsx')
+        df2 = fetch_file('fault_RMG.xlsx')
 
         df2.columns = df2.columns.str.replace(' ', '_')
         df2['Time_Acknowledged_mins'] = (df2.Fault_Acknowledged_Date - df2.Reported_Date)/pd.Timedelta(minutes=1)
