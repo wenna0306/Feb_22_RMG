@@ -64,7 +64,8 @@ if authentication_status:
                     'Fault Acknowledged Date', 'Responded on Site Date', 'RA Conducted Date',
                     'Work Started Date', 'Work Completed Date', 'Attended By', 'Action(s) Taken',
                     'Other Trades Required Date', 'Cost Cap Exceed Date',
-                    'Assistance Requested Date', 'Fault Reference', 'Incident Report', 'Remarks']
+                    'Assistance Requested Date', 'Fault Reference',
+                     'Incident Report', 'Remarks']
             parse_dates = ['Reported Date',
                            'Fault Acknowledged Date', 'Responded on Site Date', 'RA Conducted Date',
                            'Work Started Date', 'Work Completed Date',
