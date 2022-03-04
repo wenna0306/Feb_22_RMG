@@ -34,6 +34,8 @@ if authentication_status:
     st.write('Welcome *%s*' % (name))
 
 
+#======================================st.snow=============================
+    st.snow()
 #======================================different pages setup=============================
     page = st_btn_select(('Faults', 'Schedules', 'Asset', 'Inventories'),
                         nav=True,
