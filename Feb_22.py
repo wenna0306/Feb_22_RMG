@@ -37,7 +37,7 @@ if authentication_status:
 #======================================st.snow=============================
     st.snow()
 #======================================different pages setup=============================
-    page = st_btn_select(('Faults', 'Schedules', 'Asset', 'Inventories'),
+    page = st_btn_select(('Faults', 'Schedules', 'Assets', 'Inventories'),
                         nav=True,
                         format_func=lambda name: name.capitalize(),
                         )
