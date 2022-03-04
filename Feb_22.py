@@ -17,7 +17,8 @@ st.set_page_config(page_title='iSMM Dashboard',
                    layout='wide',
                    initial_sidebar_state='collapsed')
 
-
+#======================================st.snow=============================
+st.snow()
 #-----------------------------------------------User Authentication-----------------------------------------------
 names = ['wenna', 'Lifei', 'Thiru', 'Mr.Loh']
 usernames = ['wenna0306@gmail.com', 'Lifei', 'Thiru', 'booninn.loh@surbanajurong.com']
@@ -34,8 +35,7 @@ if authentication_status:
     st.write('Welcome *%s*' % (name))
 
 
-#======================================st.snow=============================
-    st.snow()
+
 #======================================different pages setup=============================
     page = st_btn_select(('Faults', 'Schedules', 'Assets', 'Inventories'),
                         nav=True,
