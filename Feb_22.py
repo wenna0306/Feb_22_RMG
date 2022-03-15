@@ -18,7 +18,7 @@ st.set_page_config(page_title='iSMM Dashboard',
                    initial_sidebar_state='collapsed')
 
 #======================================st.snow=============================
-st.snow()
+#st.snow()
 #-----------------------------------------------User Authentication-----------------------------------------------
 names = ['wenna', 'Lifei', 'Thiru', 'Mr.Loh']
 usernames = ['wenna0306@gmail.com', 'Lifei', 'Thiru', 'booninn.loh@surbanajurong.com']
